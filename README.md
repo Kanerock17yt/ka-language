@@ -10,7 +10,7 @@ How to use the ka language is simple.
 3. do ```python -V``` to check if you have python installed correctly (don't do -v unless you want lots of errors. Do -V with a capital)
 4. If step 3 executed without a problem, it should look like: ```Python 3.13.14``` or whatever version you have installed.
 5. go to the folder where ka has installed (usually your downloads folders)
-6. Type in cmd ```cd bin && python ka.py test.ka```
+6. Run run.bat and type ```y```
 
 # Support
 How to support this coding language created in py:
