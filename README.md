@@ -1,5 +1,5 @@
-# ka v1.1
-ka is a coding language created by **Kane_rock17yt**. You can download v1.1 from the releases tab.
+# ka v1.2
+ka is a coding language created by **Kane_rock17yt**. You can download v1.2 from the releases tab.
 
 # IMPORTANT
 THIS CODING LANGUAGE IS IN DEVELOPMENT. EXPECT BUGS AND ISSUES.
