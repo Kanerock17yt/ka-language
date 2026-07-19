@@ -1,0 +1,4 @@
+input_to("msg", "Enter Message to make the webhook to say: ")
+input_to("url", "Enter discord bot webhook url: ")
+
+webhook("url", "msg")

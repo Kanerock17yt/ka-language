@@ -3,9 +3,13 @@ import sys
 import os
 import re
 import time
+import requests
 
 # CLI metadata & flags (moved from file-bottom comment request)
 VERSION = "1.0"
+
+# Add this global dictionary for variables
+variables = {}
 
 def run_help():
     print("Usage:")
@@ -131,6 +135,34 @@ def run_code(lines):
             else:
                 line_pointer = closing_index + 1  # Skip the block
             continue
+        
+        # 9. webhook("URL_or_Var", "Message_or_Var")
+        webhook_match = re.match(r'^webhook\("(.*?)",\s*"(.*)"\)$', line)
+        if webhook_match:
+            # Helper function to check if the input is a variable, otherwise return as literal
+            def resolve(value):
+                return variables.get(value, value)
+
+            url = resolve(webhook_match.group(1))
+            content = resolve(webhook_match.group(2))
+            
+            try:
+                requests.post(url, json={"content": content})
+                print("Webhook: Message sent successfully!")
+            except Exception as e:
+                print(f"Webhook Error: Could not send message. {e}")
+            line_pointer += 1
+            continue
+        
+        # 10. input_to("Variable_Name", "Prompt Text")
+        input_match = re.match(r'^input_to\("(.*?)",\s*"(.*)"\)$', line)
+        if input_match:
+            var_name = input_match.group(1)
+            prompt = input_match.group(2)
+            # Store the user's input into the variables dictionary
+            variables[var_name] = input(prompt)
+            line_pointer += 1
+            continue
 
         print(f"Syntax Error: Unknown command '{line}'")
         line_pointer += 1
@@ -158,4 +190,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

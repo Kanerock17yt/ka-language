@@ -1,21 +1,39 @@
 # ka v1.0
-ka is a coding language created by Kane_rock17yt and you can now download v0.1 from the releases tab
+ka is a coding language created by **Kane_rock17yt**. You can download v1.0 from the releases tab.
 
 # IMPORTANT
-THIS CODING LANGUAGE IS IN DEVELOPMENT SO EXPECT BUGS AND ISSUES WITH ka
+THIS CODING LANGUAGE IS IN DEVELOPMENT. EXPECT BUGS AND ISSUES.
+<br> IF USING EXAMPLES, RUN ```python ka.py Examples/filename.ka```!!!
+
 ## How to use
-How to use the ka language is simple.
-1. Download python
-2. Open cmd
-3. do ```python -V``` to check if you have python installed correctly (don't do -v unless you want lots of errors. Do -V with a capital)
-4. If step 3 executed without a problem, it should look like: ```Python 3.13.14``` or whatever version you have installed.
-5. go to the folder where ka has installed (usually your downloads folders)
-6. Run the run.bat or enter ```python ka.py test.ka``` in cmd (replace test.ka with the name of your ka file)
+Using the ka language is simple:
+1. Ensure Python is installed.
+2. Open Command Prompt (CMD).
+3. Verify installation by typing `python -V` (Capital V).
+4. Navigate to the folder where `ka.py` is located.
+5. Execute your code by running `python ka.py yourfile.ka`.
 
-1. You can run ```python ka.py```, ```python ka.py -h``` or ```python ka.py --help``` for the help menu
-2. You can run ```python ka.py -v``` or ```python ka.py --version``` for the version number
+## Commands & Syntax
 
-# Support
-How to support this coding language created in py:
- - You can share this with friends that have python installed
- - You can comment on this post saying that I should continue making this project a real project
+| Command | Description | Example |
+| :--- | :--- | :--- |
+| `say("text")` | Prints text to the console. | `say("Hello World")` |
+| `say(math)` | Evaluates and prints a math expression. | `say(5 + 5)` |
+| `ask("text")` | Displays a prompt to the user. | `ask("Press enter...")` |
+| `input_to("var", "text")` | Asks user for input and saves it to a variable. | `input_to("url", "URL: ")` |
+| `webhook("url", "msg")` | Sends a message to a Discord webhook. | `webhook("url", "msg")` |
+| `wait(seconds)` | Pauses the script for a set time. | `wait(5)` |
+| `exit()` | Immediately stops the script. | `exit()` |
+
+### Logic Control
+*   **`if condition { ... }`**: Executes code inside the brackets only if the condition is true.
+*   **`while condition { ... }`**: Loops the code inside the brackets while the condition is true.
+
+## CLI Flags
+*   `python ka.py -h` / `--help`: Displays the help menu.
+*   `python ka.py -v` / `--version`: Displays the current version number.
+
+## Support
+How to support this project:
+- Share this with friends who have Python installed.
+- Leave a comment encouraging continued development of this project.
