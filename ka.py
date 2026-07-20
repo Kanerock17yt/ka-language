@@ -6,10 +6,32 @@ import time
 import requests
 
 # CLI metadata & flags (moved from file-bottom comment request)
-VERSION = "1.0"
+VERSION = "1.3"
 
-# Add this global dictionary for variables
+# Global variables for the KA runtime
 variables = {}
+
+def interpolate_string(text):
+    """Replace {variable} placeholders inside string literals."""
+    def replace(match):
+        key = match.group(1)
+        return str(variables.get(key, ""))
+    return re.sub(r'\{([^}]+)\}', replace, text)
+
+
+def parse_value(value):
+    """Resolve a raw KA value into a Python value.
+    Supports string literals, variables, and expressions.
+    """
+    value = value.strip()
+    if value.startswith('"') and value.endswith('"'):
+        return interpolate_string(value[1:-1])
+    if value in variables:
+        return variables[value]
+    try:
+        return eval(value, {"__builtins__": None}, variables)
+    except Exception:
+        return value
 
 def run_help():
     print("Usage:")
@@ -29,13 +51,25 @@ def cli_handle_flags():
         if arg in ("-h", "--help"):
             run_help()
             sys.exit(0)
+        if arg in ("-t", "--test"):
+            print("Running test script...")
+            if os.path.exists("test.ka"):
+                with open("test.ka", 'r', encoding='utf-8') as file:
+                    lines = file.readlines()
+                run_code(lines)
+            else:
+                print("Error: test.ka not found.")
+            sys.exit(0)
+        if arg in ("-c", "--credits"):
+            print(f"KA Language {VERSION} by Kane_rock17yt")
+            sys.exit(0)
 
 cli_handle_flags()
 
 def evaluate_condition(condition):
     """Safely evaluates a math or logical condition like '5 > 3' or '2 == 2'."""
     try:
-        return bool(eval(condition, {"__builtins__": None}, {}))
+        return bool(eval(condition, {"__builtins__": None}, variables))
     except Exception:
         print(f"Logic Error: Could not evaluate condition '{condition}'")
         return False
@@ -58,94 +92,93 @@ def run_code(lines):
     lines = [line.strip() for line in lines]
     line_pointer = 0
 
-    # Loop through the program using a pointer index so we can jump around
     while line_pointer < len(lines):
         line = lines[line_pointer]
 
-        # 1. Skip empty lines, comments, or standalone brackets
         if not line or line.startswith("//") or line == "}":
             line_pointer += 1
             continue
 
-        # 2. Built-in command: exit()
-        if line == "exit()":
+        exit_match = re.match(r'^exit\(\s*(\d+)\s*\)$', line)
+        if exit_match:
+            exit_code = int(exit_match.group(1))
+            if exit_code == 1:
+                print("Succesfuly Executed Task!")
+            else:
+                print("Failed to execute task.")
             sys.exit(0)
 
-        # 3. Built-in command: wait(seconds)
+        if line == "exit()":
+            print("Failed to execute task.")
+            sys.exit(0)
+
         wait_match = re.match(r'^wait\((\d+)\)$', line)
         if wait_match:
             time.sleep(int(wait_match.group(1)))
             line_pointer += 1
             continue
 
-        # 4. Built-in command: ask("Prompt Text")
         ask_match = re.match(r'^ask\("(.*)"\)$', line)
         if ask_match:
-            input(ask_match.group(1))
+            input(interpolate_string(ask_match.group(1)))
             line_pointer += 1
             continue
 
-        # 5. Core command: say("Text")
+        set_match = re.match(r'^set\("(.*?)",\s*(.+)\)$', line)
+        if set_match:
+            var_name = set_match.group(1)
+            raw_value = set_match.group(2)
+            variables[var_name] = parse_value(raw_value)
+            line_pointer += 1
+            continue
+
         string_match = re.match(r'^say\("(.*)"\)$', line)
         if string_match:
-            print(string_match.group(1))
+            print(interpolate_string(string_match.group(1)))
             line_pointer += 1
             continue
 
-        # 6. Core command: say(math)
-        math_match = re.match(r'^say\(([^"].*)\)$', line)
-        if math_match:
+        say_match = re.match(r'^say\((.+)\)$', line)
+        if say_match:
+            expression = say_match.group(1)
             try:
-                print(eval(math_match.group(1), {"__builtins__": None}, {}))
+                result = parse_value(expression)
+                print(result)
             except Exception:
-                print(f"Error: Invalid math expression '{math_match.group(1)}'")
+                print(f"Error: Invalid expression '{expression}'")
             line_pointer += 1
             continue
 
-        # 7. LOGIC: while condition {
         while_match = re.match(r'^while\s+(.+)\s*\{$', line)
         if while_match:
             condition = while_match.group(1)
             closing_index = find_matching_bracket(lines, line_pointer)
-            
             if closing_index == -1:
                 print("Syntax Error: Missing closing bracket '}' for while loop")
                 sys.exit(1)
-            
-            # If the condition is true, run the next line. 
-            # If false, jump completely past the closing bracket.
             if evaluate_condition(condition):
                 line_pointer += 1
             else:
                 line_pointer = closing_index + 1
             continue
 
-        # 8. LOGIC: if condition {
         if_match = re.match(r'^if\s+(.+)\s*\{$', line)
         if if_match:
             condition = if_match.group(1)
             closing_index = find_matching_bracket(lines, line_pointer)
-            
             if closing_index == -1:
                 print("Syntax Error: Missing closing bracket '}' for if statement")
                 sys.exit(1)
-                
             if evaluate_condition(condition):
-                line_pointer += 1  # Enter the block
+                line_pointer += 1
             else:
-                line_pointer = closing_index + 1  # Skip the block
+                line_pointer = closing_index + 1
             continue
-        
-        # 9. webhook("URL_or_Var", "Message_or_Var")
-        webhook_match = re.match(r'^webhook\("(.*?)",\s*"(.*)"\)$', line)
-        if webhook_match:
-            # Helper function to check if the input is a variable, otherwise return as literal
-            def resolve(value):
-                return variables.get(value, value)
 
-            url = resolve(webhook_match.group(1))
-            content = resolve(webhook_match.group(2))
-            
+        webhook_match = re.match(r'^webhook\((.+),\s*(.+)\)$', line)
+        if webhook_match:
+            url = parse_value(webhook_match.group(1))
+            content = parse_value(webhook_match.group(2))
             try:
                 requests.post(url, json={"content": content})
                 print("Webhook: Message sent successfully!")
@@ -153,13 +186,11 @@ def run_code(lines):
                 print(f"Webhook Error: Could not send message. {e}")
             line_pointer += 1
             continue
-        
-        # 10. input_to("Variable_Name", "Prompt Text")
+
         input_match = re.match(r'^input_to\("(.*?)",\s*"(.*)"\)$', line)
         if input_match:
             var_name = input_match.group(1)
-            prompt = input_match.group(2)
-            # Store the user's input into the variables dictionary
+            prompt = interpolate_string(input_match.group(2))
             variables[var_name] = input(prompt)
             line_pointer += 1
             continue
