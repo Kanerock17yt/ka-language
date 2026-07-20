@@ -16,8 +16,11 @@ K:::::::K    K:::::K     A:::::A               A:::::A
 K:::::::K    K:::::K    A:::::A                 A:::::A 
 KKKKKKKKK    KKKKKKK   AAAAAAA                   AAAAAAA
 </pre>
-
-# Ka v1.3
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
+![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
+# Ka v1.4
 ka is a coding language created by **Kane_rock17yt**. You can download the newest version from the releases tab.
 
 # IMPORTANT
