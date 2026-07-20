@@ -59,6 +59,10 @@ Using the ka language is simple:
 *   `python ka.py -t` / `--test`: Runs test file named `test.ka`.
 *   `python ka.py -c` / `--credits`: Displays developer(s) that have worked on this project.
 
+# Included Ka files:
+*   `discord_webhook.ka`
+*   `test.ka`
+
 ## Support
 How to support this project:
 - Share this with friends who have Python installed.
