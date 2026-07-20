@@ -1,4 +1,23 @@
-# ka v1.2
+<pre>
+KKKKKKKKK    KKKKKKK               AAA               
+K:::::::K    K:::::K              A:::A              
+K:::::::K    K:::::K             A:::::A             
+K:::::::K   K::::::K            A:::::::A            
+KK::::::K  K:::::KKK           A:::::::::A           
+  K:::::K K:::::K             A:::::A:::::A          
+  K::::::K:::::K             A:::::A A:::::A         
+  K:::::::::::K             A:::::A   A:::::A        
+  K:::::::::::K            A:::::A     A:::::A       
+  K::::::K:::::K          A:::::AAAAAAAAA:::::A      
+  K:::::K K:::::K        A:::::::::::::::::::::A     
+KK::::::K  K:::::KKK    A:::::AAAAAAAAAAAAA:::::A    
+K:::::::K   K::::::K   A:::::A             A:::::A   
+K:::::::K    K:::::K  A:::::A               A:::::A  
+K:::::::K    K:::::K A:::::A                 A:::::A 
+KKKKKKKKK    KKKKKKKAAAAAAA                   AAAAAAA
+</pre>
+
+# Ka v1.2
 ka is a coding language created by **Kane_rock17yt**. You can download v1.2 from the releases tab.
 
 # IMPORTANT
